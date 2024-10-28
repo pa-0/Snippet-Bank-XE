@@ -4,7 +4,7 @@ on:
 
 env:
   GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  REPO_ROOT: ${{env.GITHUB_WORKSPACE}}
+  REPO_ROOT: ${{github.WORKSPACE}}
 permissions: write-all
 
 jobs:
