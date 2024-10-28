@@ -27,6 +27,7 @@ jobs:
         GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
       run:  |
         Set-Location $env:REPO_ROOT
+        Move-Item "snipbank.exe" ".\sb-build
         Compress-Archive -Path ".\sb-build\*" -DestinationPath ".\SnippetBank-XE.zip"
         gh release create v1.0 ".\SnippetBank-XE.zip" -t "v1.0"
 
