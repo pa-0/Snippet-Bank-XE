@@ -1,0 +1,33 @@
+name: Build
+on:
+  workflow_dispatch:
+
+env:
+  GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  REPO_ROOT: ${{env.GITHUB_WORKSPACE}}
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: windows-latest
+        
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+    - name: Setup Dir
+      run: |
+        Set-Location $env:REPO_ROOT
+        New-Item -Path sb-build -ItemType "Directory"
+    - name: Install Lazarus
+      uses: gcarreno/setup-lazarus@v3
+    - name: Build the Main Application
+      run: lazbuild -B ".\snipbank.lpi" --lazarusdir="$env:REPO_ROOT\sb-build
+    - name: Create Release
+      env:
+        GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      run:  |
+        Set-Location $env:REPO_ROOT
+        Compress-Archive -Path ".\sb-build\*" -DestinationPath ".\SnippetBank-XE.zip"
+        gh release create v1.0 ".\SnippetBank-XE.zip" -t "v1.0"
+
+
